@@ -1,5 +1,9 @@
 import express, { Request, Response } from 'express';
 import { Product, ProductStore } from '../models/product';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const store = new ProductStore();
 
@@ -14,6 +18,14 @@ const show = async (req: Request, res: Response) => {
 }
 
 const create = async (req: Request, res: Response) => {
+    try{
+        jwt.verify(req.body.token, process.env.TOKEN_SECRET as string);
+    } catch(err) {
+        res.status(401);
+        res.json(`invalid token ${err}`);
+        return
+    }
+    
     try {
         const product: Product = {
             id:req.body.id,
