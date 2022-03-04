@@ -1,4 +1,8 @@
 import client from '../database';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export type User = {
      id: Number;
@@ -40,21 +44,53 @@ export class UserStore {
   }
 
   async create(u: User): Promise<User> {
-      try {
-    const sql = 'INSERT INTO users (firstName, lastName, password) VALUES($1, $2, $3) RETURNING *';
+
+    const saltRounds: string = process.env.SALT_ROUNDS as string
+    const pepper: string = process.env.BCRYPT_PASSWORD as string
     
-    const conn = await client.connect();
+    try {
+       const sql = 'INSERT INTO users (firstName, lastName, password) VALUES($1, $2, $3) RETURNING *';
+    
+       const conn = await client.connect();
 
-    const result = await conn.query(sql, [u.firstName,u.lastName, u.password]);
+       const hash = bcrypt.hashSync(
+        u.password + pepper, 
+        parseInt(saltRounds)
+      );
 
-    const user = result.rows[0];
+       const result = await conn.query(sql, [u.firstName,u.lastName, u.password]);
+ 
+       const user = result.rows[0];
 
-    conn.release()
+       conn.release()
 
-    return user
+       return user
       } catch (err) {
           throw new Error(`Could not add new user ${u.firstName}.${u.lastName}. Error: ${err}`)
       }
+  }
+
+  async authenticate(firstName: string, lastName: string, password: string): Promise<User | null> {
+    const pepper: string = process.env.BCRYPT_PASSWORD as string
+    const conn = await client.connect()
+    const sql = 'SELECT password FROM users WHERE username=($1)'
+
+    const result = await conn.query(sql, [firstName, lastName])
+
+    console.log(password+pepper)
+
+    if(result.rows.length) {
+
+      const user = result.rows[0]
+
+      console.log(user)
+
+      if (bcrypt.compareSync(password+pepper, user.password_digest)) {
+        return user
+      }
+    }
+
+    return null
   }
 
   async delete(id: string): Promise<User> {
