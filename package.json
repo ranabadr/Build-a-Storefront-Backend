@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prettier": "prettier --config prettierrc.json src/**/*.ts --write"
+    "prettier": "prettier --config prettierrc.json src/**/*.ts --write",
+    "lint": "eslint src/**/*.ts"
   },
   "keywords": [],
   "author": "",
