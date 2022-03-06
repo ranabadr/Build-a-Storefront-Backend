@@ -7,7 +7,8 @@
     "prettier": "prettier --config prettierrc.json src/**/*.ts --write",
     "lint": "eslint src/**/*.ts",
     "build": "npx tsc",
-    "start": "nodemon src/server.ts"
+    "start": "nodemon src/server.ts",
+    "test": "ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test"
   },
   "keywords": [],
   "author": "",
