@@ -35,6 +35,7 @@
  -   jasmine-spec-reporter
  -   jsonwebtoken
  -   pg
+ -   supertest
 ### Devdependencies
  
  Install:
