@@ -21,13 +21,23 @@ const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   
 
 const index = async (_req: Request, res: Response) => {
-  const users = await store.index()
+  try {
+    const users = await store.index()
   res.json(users)
+  } catch (err) {
+    res.status(400)
+    res.json(err)
+  }
 }
 
 const show = async (req: Request, res: Response) => {
-   const users = await store.show(req.body.id)
-   res.json(users)
+   try {
+    const users = await store.show(req.body.id)
+    res.json(users)
+   } catch (err) {
+    res.status(400)
+    res.json(err)
+  }
 }
 
 const create = async (req: Request, res: Response) => {
@@ -48,8 +58,13 @@ const create = async (req: Request, res: Response) => {
 }
 
 const destroy = async (req: Request, res: Response) => {
-    const deleted = await store.delete(req.body.id)
-    res.json(deleted)
+    try {
+      const deleted = await store.delete(req.body.id)
+      res.json(deleted)
+    } catch(err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const userRoutes = (app: express.Application) => {
