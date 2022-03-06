@@ -1,6 +1,6 @@
-import { Product, ProductStore } from '../../models/product';
+import { Order, OrderStore } from '../../models/order';
 
-const store = new ProductStore()
+const store = new OrderStore()
 
 describe("Product Model", () => {
   it('should have an index method', () => {
@@ -22,15 +22,13 @@ describe("Product Model", () => {
   it('create method should add a product', async () => {
     const result = await store.create({
         id: 1,
-        name: 'Adidas',
-        price: 250,
-        category: 'Sporty shoes'
+        status: "active",
+        user_id: 1
     });
     expect(result).toEqual({
       id: 1,
-      name: 'Adidas',
-      price: 250,
-      category: 'Sporty shoes'
+      status: "active",
+      user_id: 1
     });
   });
 
@@ -38,9 +36,8 @@ describe("Product Model", () => {
     const result = await store.index();
     expect(result).toEqual([{
       id: 1,
-      name: 'Adidas',
-      price: 250,
-      category: 'Sporty shoes'
+      status: "active",
+      user_id: 1
     }]);
   });
 
@@ -48,9 +45,8 @@ describe("Product Model", () => {
     const result = await store.show("1");
     expect(result).toEqual({
         id: 1,
-        name: 'Adidas',
-        price: 250,
-        category: 'Sporty shoes'
+        status: "active",
+        user_id: 1
     });
   });
 
