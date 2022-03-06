@@ -7,6 +7,17 @@ dotenv.config();
 
 const store = new ProductStore();
 
+const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
+    try {
+      const authorizationHeader = req.headers.authorization as string;
+      const token = authorizationHeader;
+      jwt.verify(token, process.env.TOKEN_SECRET as string);
+      next();
+    } catch (error) {
+      res.status(401).json('Access denied, invalid token');
+    }
+  };
+
 const index = async (_req: Request, res: Response) => {
   try {
     const products = await store.index()
@@ -28,14 +39,6 @@ const show = async (req: Request, res: Response) => {
 }
 
 const create = async (req: Request, res: Response) => {
-    try{
-        jwt.verify(req.body.token, process.env.TOKEN_SECRET as string);
-    } catch(err) {
-        res.status(401);
-        res.json(`invalid token ${err}`);
-        return
-    }
-    
     try {
         const product: Product = {
             id:req.body.id,
@@ -64,8 +67,8 @@ const destroy = async (req: Request, res: Response) => {
 const productRoutes = (app: express.Application) => {
   app.get('/products', index)
   app.get('/products/:id', show)
-  app.post('/products', create)
-  app.delete('/products', destroy)
+  app.post('/products', verifyAuthToken, create)
+  app.delete('/products', verifyAuthToken, destroy)
 }
 
 export default productRoutes;

@@ -13,8 +13,9 @@ const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
       const token = authorizationHeader;
       jwt.verify(token, process.env.TOKEN_SECRET as string);
       next();
-    } catch (error) {
-      res.status(401).json('Access denied, invalid token');
+    } catch (err) {
+      res.status(400)
+      res.json(err)
     }
   };
   
