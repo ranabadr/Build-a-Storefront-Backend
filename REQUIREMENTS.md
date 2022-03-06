@@ -26,18 +26,18 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## Data Shapes
 #### Product
-- id
-- name
-- price
-- category
+- id [SERIAL PRIMARY KEY]
+- name [VARCHAR]
+- price [integer]
+- category [VARCHAR]
 
 #### User
-- id
-- firstName
-- lastName
-- password
+- id [SERIAL PRIMARY KEY]
+- firstName [VARCHAR]
+- lastName [VARCHAR]
+- password [VARCHAR]
 
 #### Orders
-- id
-- status
-- user_id
+- id [SERIAL PRIMARY KEY]
+- status [VARCHAR(15)]
+- user_id [bigint REFERENCES users(id)]
