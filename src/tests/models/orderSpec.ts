@@ -1,8 +1,10 @@
 import { Order, OrderStore } from '../../models/order';
 
-const store = new OrderStore()
+const store = new OrderStore();
 
-describe("Product Model", () => {
+
+
+describe("Order Model", () => {
   it('should have an index method', () => {
     expect(store.index).toBeDefined();
   });
@@ -19,7 +21,7 @@ describe("Product Model", () => {
     expect(store.delete).toBeDefined();
   });
 
-  it('create method should add a product', async () => {
+  it('create method should add an order', async () => {
     const result = await store.create({
         id: 1,
         status: "active",
@@ -32,7 +34,7 @@ describe("Product Model", () => {
     });
   });
 
-  it('index method should return a list of products', async () => {
+  it('index method should return a list of orders', async () => {
     const result = await store.index();
     expect(result).toEqual([{
       id: 1,
@@ -41,7 +43,7 @@ describe("Product Model", () => {
     }]);
   });
 
-  it('show method should return the correct product', async () => {
+  it('show method should return the correct order', async () => {
     const result = await store.show("1");
     expect(result).toEqual({
         id: 1,
@@ -50,7 +52,7 @@ describe("Product Model", () => {
     });
   });
 
-  it('delete method should remove the product', async () => {
+  it('delete method should remove the order', async () => {
     store.delete("1");
     const result = await store.index()
 
