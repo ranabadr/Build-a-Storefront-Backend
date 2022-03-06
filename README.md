@@ -56,6 +56,7 @@
  -   prettier
  -   ts-node
  -   typescript
+ -   @types/supertest
 
 ### .env file
  
