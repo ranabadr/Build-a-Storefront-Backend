@@ -1,7 +1,21 @@
 import express, { Request, Response } from 'express';
 import { Order, OrderStore } from '../models/order';
+import jwt from 'jsonwebtoken';
 
 const store = new OrderStore();
+
+const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
+  try {
+    const authorizationHeader = req.headers.authorization as string;
+    const token = authorizationHeader;
+    jwt.verify(token, process.env.TOKEN_SECRET as string);
+    next();
+  } catch(err) {
+    res.status(400)
+    res.json(err)
+  }
+};
+
 
 const index = async (_req: Request, res: Response) => {
   try{
@@ -65,11 +79,11 @@ const addProduct = async (req: Request, res:Response) => {
 
 
 const orderRoutes = (app: express.Application) => {
-  app.get('/orders', index)
-  app.get('/orders/:id', show)
-  app.post('/orders', create)
-  app.delete('/orders', destroy)
-  app.post('/orders/:id/products', addProduct)
+  app.get('/orders', verifyAuthToken, index)
+  app.get('/orders/:id', verifyAuthToken, show)
+  app.post('/orders', verifyAuthToken, create)
+  app.delete('/orders', verifyAuthToken, destroy)
+  app.post('/orders/:id/products', verifyAuthToken, addProduct)
 }
 
 export default orderRoutes;
