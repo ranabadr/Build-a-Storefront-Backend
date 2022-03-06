@@ -55,6 +55,7 @@ describe("Product Model", () => {
         name: 'Adidas',
         price: 250,
         category: 'Sporty shoes'
+    });
   });
 
   it('delete method should remove the product', async () => {
