@@ -8,13 +8,23 @@ dotenv.config();
 const store = new ProductStore();
 
 const index = async (_req: Request, res: Response) => {
-  const products = await store.index()
-  res.json(products)
+  try {
+    const products = await store.index()
+    res.json(products)
+  } catch(err) {
+    res.status(400)
+    res.json(err)
+}
 }
 
 const show = async (req: Request, res: Response) => {
-   const products = await store.show(req.body.id)
-   res.json(products)
+   try {
+    const products = await store.show(req.body.id)
+    res.json(products)
+   } catch(err) {
+    res.status(400)
+    res.json(err)
+}
 }
 
 const create = async (req: Request, res: Response) => {
@@ -43,8 +53,12 @@ const create = async (req: Request, res: Response) => {
 }
 
 const destroy = async (req: Request, res: Response) => {
-    const deleted = await store.delete(req.body.id)
-    res.json(deleted)
+    try {
+
+    } catch(err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const productRoutes = (app: express.Application) => {
