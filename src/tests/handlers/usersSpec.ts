@@ -1,7 +1,7 @@
 import supertest from 'supertest';
-import productRoutes from '../../handlers/products';
+import userRoutes from '../../handlers/users';
 
-const req = supertest(productRoutes);
+const req = supertest(userRoutes);
 
 describe('Test endpoints', () => {
     it('Get the users endpoint', async (done) => {
