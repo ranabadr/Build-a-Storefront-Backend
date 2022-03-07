@@ -41,3 +41,9 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id [SERIAL PRIMARY KEY]
 - status [VARCHAR(15)]
 - user_id [bigint REFERENCES users(id)]
+
+### Order_products
+- id [SERIAL PRIMARY KEY]
+- quantity [integer]
+- order_id [bigint REFERENCES orders(id)]
+- product_id [bigint REFERENCES products(id)]
