@@ -19,7 +19,7 @@ describe('Test endpoints', () => {
         expect(res.status).toBe(200);
     })
 
-    it('create method should add a user', async () => {
+    it('create method should add a product', async () => {
         const token = await request.post("/users").send({
             firstName: "salma",
             lastName: "badr",

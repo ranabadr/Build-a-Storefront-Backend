@@ -18,4 +18,19 @@ describe("User Model", () => {
   it('should have a delete method', () => {
     expect(store.delete).toBeDefined();
   });
+
+  it('create method should add a user', async () => {
+    const result = await store.create({  
+           id: 1,
+           firstName: "Rana",
+           lastName: "Badr",
+           password: "password"
+       });
+         expect(result).toEqual({
+           id: 1,
+           firstName: "Rana",
+           lastName: "Badr",
+           password: "password"
+         });
+       });
 });
