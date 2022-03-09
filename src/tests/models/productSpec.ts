@@ -5,7 +5,7 @@ import app from '../../server'
 
 dotenv.config();
 
-const store = new ProductStore()
+const store = new ProductStore();
 
 const request = supertest(app);
 
@@ -38,6 +38,7 @@ describe("Product Model", () => {
 
   it('create method should add a product', async () => {
     const token = await request.post("/users").send({
+        id: 2,
         firstName: "salma",
         lastName: "badr",
         password: "pass123"
@@ -48,5 +49,35 @@ describe("Product Model", () => {
         category: "sporty"
     })
     .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo1NSwiZmlyc3RuYW1lIjoic2FsbWEiLCJsYXN0bmFtZSI6ImJhZHIiLCJwYXNzd29yZCI6InBhc3MxMjMifSwiaWF0IjoxNjQ2ODM1MTc1fQ.B9clGCUFww18US0TXNKogleWTJQ0hmrLUpjID7uHHTQ')
+    expect(response.status).toBe(200)
+  });
+
+  it('index method should return a list of books', async () => {
+    const result = await store.index();
+    expect(result).toEqual([{
+      name: "T-shirt",
+      price: 500,
+      category: "sporty"}] as unknown as Product[]);
+  });
+
+  it('show method should return the correct book', async () => {
+    const result: Product = await store.show("1");
+    expect(result).toEqual({
+      name: "T-shirt",
+      price: 500,
+      category: "sporty"
+      } as Product);
+  });
+
+  it('delete method should remove the product', async () => {
+    const token = await request.post("/users").send({
+      id: 2,
+      firstName: "salma",
+      lastName: "badr",
+      password: "pass123"
+    });
+    const response = await request.delete('/products')
+    .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo1NSwiZmlyc3RuYW1lIjoic2FsbWEiLCJsYXN0bmFtZSI6ImJhZHIiLCJwYXNzd29yZCI6InBhc3MxMjMifSwiaWF0IjoxNjQ2ODM1MTc1fQ.B9clGCUFww18US0TXNKogleWTJQ0hmrLUpjID7uHHTQ')
+    expect(response.status).toBe(200)
   });
 });
