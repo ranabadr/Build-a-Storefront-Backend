@@ -52,7 +52,7 @@ describe("Product Model", () => {
     expect(response.status).toBe(200)
   });
 
-  it('index method should return a list of books', async () => {
+  it('index method should return a list of products', async () => {
     const result = await store.index();
     expect(result).toEqual([{
       name: "T-shirt",
@@ -60,7 +60,7 @@ describe("Product Model", () => {
       category: "sporty"}] as unknown as Product[]);
   });
 
-  it('show method should return the correct book', async () => {
+  it('show method should return the correct product', async () => {
     const result: Product = await store.show("1");
     expect(result).toEqual({
       name: "T-shirt",
