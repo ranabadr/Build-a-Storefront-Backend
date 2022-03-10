@@ -35,35 +35,67 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var order_1 = require("../models/order");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var store = new order_1.OrderStore();
+var verifyAuthToken = function (req, res, next) {
+    try {
+        var authorizationHeader = req.headers.authorization;
+        var token = authorizationHeader;
+        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
+        next();
+    }
+    catch (err) {
+        res.status(400);
+        res.json(err);
+    }
+};
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orders;
+    var orders, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, store.index()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.index()];
             case 1:
                 orders = _a.sent();
                 res.json(orders);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                res.status(400);
+                res.json(err_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orders;
+    var orders, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, store.show(req.body.id)];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.show(req.body.id)];
             case 1:
                 orders = _a.sent();
                 res.json(orders);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_2 = _a.sent();
+                res.status(400);
+                res.json(err_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var order, newOrder, err_1;
+    var order, newOrder, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -79,28 +111,36 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 res.json(newOrder);
                 return [3 /*break*/, 3];
             case 2:
-                err_1 = _a.sent();
+                err_3 = _a.sent();
                 res.status(400);
-                res.json(err_1);
+                res.json(err_3);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var deleted;
+    var deleted, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, store.delete(req.body.id)];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.delete(req.body.id)];
             case 1:
                 deleted = _a.sent();
                 res.json(deleted);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                res.status(400);
+                res.json(err_4);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, productId, quantity, addedProduct, err_2;
+    var orderId, productId, quantity, addedProduct, err_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -116,19 +156,19 @@ var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 res.json(addedProduct);
                 return [3 /*break*/, 4];
             case 3:
-                err_2 = _a.sent();
+                err_5 = _a.sent();
                 res.status(400);
-                res.json(err_2);
+                res.json(err_5);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); };
 var orderRoutes = function (app) {
-    app.get('/orders', index);
-    app.get('/orders/:id', show);
-    app.post('/orders', create);
-    app.delete('/orders', destroy);
-    app.post('/orders/:id/products', addProduct);
+    app.get('/orders', verifyAuthToken, index);
+    app.get('/orders/:id', verifyAuthToken, show);
+    app.post('/orders', verifyAuthToken, create);
+    app.delete('/orders', verifyAuthToken, destroy);
+    app.post("/orders/id/products", verifyAuthToken, addProduct);
 };
 exports.default = orderRoutes;

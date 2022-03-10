@@ -35,10 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var supertest_1 = __importDefault(require("supertest"));
 var order_1 = require("../../models/order");
+var server_1 = __importDefault(require("../../server"));
 var store = new order_1.OrderStore();
-describe("Product Model", function () {
+var request = (0, supertest_1.default)(server_1.default);
+describe("Order Model", function () {
     it('should have an index method', function () {
         expect(store.index).toBeDefined();
     });
@@ -51,68 +57,131 @@ describe("Product Model", function () {
     it('should have a delete method', function () {
         expect(store.delete).toBeDefined();
     });
-    it('create method should add a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+    it('create method should add a order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.create({
+                case 0: return [4 /*yield*/, request.post("/users").send({
                         id: 1,
-                        status: "active",
-                        user_id: 1
+                        firstName: "Rana",
+                        lastName: "Badr",
+                        password: "password"
                     })];
                 case 1:
-                    result = _a.sent();
-                    expect(result).toEqual({
-                        id: 1,
-                        status: "active",
-                        user_id: 1
-                    });
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('index method should return a list of products', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
-                case 1:
-                    result = _a.sent();
-                    expect(result).toEqual([{
+                    token = _a.sent();
+                    return [4 /*yield*/, request.post('/orders').send({
                             id: 1,
                             status: "active",
-                            user_id: 1
-                        }]);
+                        })
+                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('show method should return the correct product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+    it('index method should return a list of orders', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.show("1")];
-                case 1:
-                    result = _a.sent();
-                    expect(result).toEqual({
+                case 0: return [4 /*yield*/, request.post("/users").send({
                         id: 1,
-                        status: "active",
-                        user_id: 1
-                    });
+                        firstName: "Rana",
+                        lastName: "Badr",
+                        password: "password"
+                    })];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, request.get('/orders')
+                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('delete method should remove the product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+    it('show method should return the correct order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    store.delete("1");
-                    return [4 /*yield*/, store.index()];
+                case 0: return [4 /*yield*/, request.post("/users").send({
+                        id: 1,
+                        firstName: "Rana",
+                        lastName: "Badr",
+                        password: "password"
+                    })];
                 case 1:
-                    result = _a.sent();
-                    expect(result).toEqual([]);
+                    token = _a.sent();
+                    return [4 /*yield*/, request.get('/orders/:id')
+                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('delete method should remove the order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post("/users").send({
+                        id: 1,
+                        firstName: "Rana",
+                        lastName: "Badr",
+                        password: "password"
+                    })];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, request.delete('/orders')
+                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('addProduct method should work', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, createProduct, createOrder, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/users').send({
+                        id: 1,
+                        firstName: "Rana",
+                        lastName: "Badr",
+                        password: "password"
+                    })];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, request.post('/products').send({
+                            id: 1,
+                            name: "T-shirt",
+                            price: 500,
+                            category: "sporty"
+                        })
+                            .set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M")];
+                case 2:
+                    createProduct = _a.sent();
+                    return [4 /*yield*/, request.post('/orders').send({
+                            id: 1,
+                            status: "active",
+                        })
+                            .set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M")];
+                case 3:
+                    createOrder = _a.sent();
+                    return [4 /*yield*/, request.post("orders/1/products").send({
+                            id: 1,
+                            quantity: 50,
+                            order_id: 1,
+                            product_id: 1
+                        })
+                            .set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M")];
+                case 4:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });

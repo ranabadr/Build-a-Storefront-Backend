@@ -83,7 +83,7 @@ const orderRoutes = (app: express.Application) => {
   app.get('/orders/:id', verifyAuthToken, show)
   app.post('/orders', verifyAuthToken, create)
   app.delete('/orders', verifyAuthToken, destroy)
-  app.post('/orders/:id/products', verifyAuthToken, addProduct)
+  app.post(`/orders/id/products`, verifyAuthToken, addProduct)
 }
 
 export default orderRoutes;

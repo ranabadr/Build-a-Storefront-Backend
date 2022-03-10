@@ -111,7 +111,7 @@ var UserStore = /** @class */ (function () {
                     case 2:
                         conn = _a.sent();
                         hash = bcrypt_1.default.hashSync(u.password + pepper, parseInt(saltRounds));
-                        return [4 /*yield*/, conn.query(sql, [u.firstName, u.lastName, u.password])];
+                        return [4 /*yield*/, conn.query(sql, [u.firstName, u.lastName, hash])];
                     case 3:
                         result = _a.sent();
                         user = result.rows[0];

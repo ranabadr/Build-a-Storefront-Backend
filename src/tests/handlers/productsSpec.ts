@@ -5,8 +5,7 @@ import app from '../../server'
 
 const store = new ProductStore()
 
-const req = supertest(productRoutes);
-const request = supertest(app);
+const req = supertest(app);
 
 describe('Test endpoints', () => {
     it('Get the products endpoint', async () => {
@@ -20,12 +19,12 @@ describe('Test endpoints', () => {
     })
 
     it('create method should add a product', async () => {
-        const token = await request.post("/users").send({
+        const token = await req.post("/users").send({
             firstName: "salma",
             lastName: "badr",
             password: "pass123"
         });
-        const response = await request.post('/products').send({
+        const response = await req.post('/products').send({
             name: "T-shirt",
             price: 500,
             category: "sporty"

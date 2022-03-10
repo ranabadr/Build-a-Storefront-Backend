@@ -40,45 +40,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
-var user_1 = require("../../models/user");
 var server_1 = __importDefault(require("../../server"));
-var store = new user_1.UserStore();
-var request = (0, supertest_1.default)(server_1.default);
-describe("User Model", function () {
-    it('should have an index method', function () {
-        expect(store.index).toBeDefined();
-    });
-    it('should have a show method', function () {
-        expect(store.show).toBeDefined();
-    });
-    it('should have a create method', function () {
-        expect(store.create).toBeDefined();
-    });
-    it('should have a delete method', function () {
-        expect(store.delete).toBeDefined();
-    });
-    it('create method should add a user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+var req = (0, supertest_1.default)(server_1.default);
+describe('Test endpoints', function () {
+    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
-                case 1:
-                    result = _a.sent();
-                    expect(result.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('index method should return a list of users', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
+                case 0: return [4 /*yield*/, req.post("/users").send({
                         id: 1,
                         firstName: "Rana",
                         lastName: "Badr",
@@ -86,53 +55,61 @@ describe("User Model", function () {
                     })];
                 case 1:
                     token = _a.sent();
-                    return [4 /*yield*/, request.get('/users')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('show method should return the correct user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+    it('Get the orders endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var res;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
+                case 0: return [4 /*yield*/, req.get('/orders')
+                        .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.get('/users/:id')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    res = _a.sent();
+                    expect(res.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('delete method should remove the user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+    it('Get the orders/1 endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var res;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
+                case 0: return [4 /*yield*/, req.get('/orders/1')
+                        .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.delete('/users')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
+                    res = _a.sent();
+                    expect(res.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Get the orders/id/products endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var createProduct, createOrder, res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, req.post('/products').send({
+                        id: 1,
+                        name: "T-shirt",
+                        price: 500,
+                        category: "sporty"
+                    })
+                        .set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M")];
+                case 1:
+                    createProduct = _a.sent();
+                    return [4 /*yield*/, req.post('/orders').send({
+                            id: 1,
+                            status: "active",
+                        })
+                            .set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M")];
                 case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    createOrder = _a.sent();
+                    return [4 /*yield*/, req.get('/orders/1/products')
+                            .set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M")];
+                case 3:
+                    res = _a.sent();
+                    expect(res.status).toBe(200);
                     return [2 /*return*/];
             }
         });
