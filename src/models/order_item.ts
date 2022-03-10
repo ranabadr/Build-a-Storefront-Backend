@@ -8,7 +8,7 @@ export type OrderItem = {
   };
 
   export class OrderItemStore {
-    async create(
+    async addProduct(
       quantity: number,
       order_id: number,
       product_id: number
