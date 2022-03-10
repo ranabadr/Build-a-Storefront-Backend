@@ -58,7 +58,7 @@ export class UserStore {
         parseInt(saltRounds)
       );
 
-       const result = await conn.query(sql, [u.firstName,u.lastName, u.password]);
+       const result = await conn.query(sql, [u.firstName,u.lastName, hash]);
  
        const user = result.rows[0];
 
