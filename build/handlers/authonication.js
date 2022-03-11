@@ -39,56 +39,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var supertest_1 = __importDefault(require("supertest"));
-var user_1 = require("../../models/user");
-var server_1 = __importDefault(require("../../server"));
-var store = new user_1.UserStore();
-var req = (0, supertest_1.default)(server_1.default);
-describe('Test User endpoints', function () {
-    var token = '';
-    it('create method should add a user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, req.post('/users').send({
-                        firstname: 'Rana',
-                        lastname: 'Badr',
-                        password: 'password',
-                    })];
-                case 1:
-                    result = _a.sent();
-                    token = result.body.token;
-                    expect(result.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('Get all users endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, req
-                        .get('/users')
-                        .set("Authorization", 'Bearer ' + token)];
-                case 1:
-                    res = _a.sent();
-                    expect(res.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('Get the users/:id endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, req
-                        .get('/users/:1')
-                        .set("Authorization", 'Bearer ' + token)];
-                case 1:
-                    res = _a.sent();
-                    expect(res.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-});
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+var verifyAuthToken = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var authorizationHeader, token;
+    return __generator(this, function (_a) {
+        try {
+            authorizationHeader = req.headers.authorization;
+            token = authorizationHeader.split(' ')[1];
+            jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
+            next();
+        }
+        catch (err) {
+            res.status(400);
+            res.json(err);
+        }
+        return [2 /*return*/];
+    });
+}); };
+exports.default = verifyAuthToken;

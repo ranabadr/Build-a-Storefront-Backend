@@ -39,56 +39,63 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var supertest_1 = __importDefault(require("supertest"));
-var user_1 = require("../../models/user");
-var server_1 = __importDefault(require("../../server"));
-var store = new user_1.UserStore();
-var req = (0, supertest_1.default)(server_1.default);
-describe('Test User endpoints', function () {
-    var token = '';
-    it('create method should add a user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, req.post('/users').send({
-                        firstname: 'Rana',
-                        lastname: 'Badr',
-                        password: 'password',
-                    })];
-                case 1:
-                    result = _a.sent();
-                    token = result.body.token;
-                    expect(result.status).toBe(200);
-                    return [2 /*return*/];
-            }
+exports.OrderItemStore = void 0;
+var database_1 = __importDefault(require("../database"));
+var OrderItemStore = /** @class */ (function () {
+    function OrderItemStore() {
+    }
+    OrderItemStore.prototype.addProduct = function (orderItem) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'INSERT INTO order_items (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
+                        return [4 /*yield*/, conn.query(sql, [
+                                orderItem.quantity,
+                                orderItem.order_id,
+                                orderItem.product_id,
+                            ])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 3:
+                        err_1 = _a.sent();
+                        throw new Error("Could not add product ".concat(orderItem.product_id, " to order ").concat(orderItem.order_id, ". Error: ").concat(err_1));
+                    case 4: return [2 /*return*/];
+                }
+            });
         });
-    }); });
-    it('Get all users endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, req
-                        .get('/users')
-                        .set("Authorization", 'Bearer ' + token)];
-                case 1:
-                    res = _a.sent();
-                    expect(res.status).toBe(200);
-                    return [2 /*return*/];
-            }
+    };
+    OrderItemStore.prototype.deleteAll = function (order_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = 'DELETE FROM order_products WHERE order_id = ($1)';
+                        return [4 /*yield*/, conn.query(sql, [order_id])];
+                    case 2:
+                        _a.sent();
+                        conn.release();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_2 = _a.sent();
+                        throw new Error("Could not delete order details for order id: ".concat(order_id, ". Error: ").concat(err_2));
+                    case 4: return [2 /*return*/];
+                }
+            });
         });
-    }); });
-    it('Get the users/:id endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var res;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, req
-                        .get('/users/:1')
-                        .set("Authorization", 'Bearer ' + token)];
-                case 1:
-                    res = _a.sent();
-                    expect(res.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-});
+    };
+    return OrderItemStore;
+}());
+exports.OrderItemStore = OrderItemStore;

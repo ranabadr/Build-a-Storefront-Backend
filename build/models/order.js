@@ -103,8 +103,7 @@ var OrderStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        return [4 /*yield*/, conn
-                                .query(sql, [o.status, o.user_id])];
+                        return [4 /*yield*/, conn.query(sql, [o.status, o.user_id])];
                     case 2:
                         result = _a.sent();
                         order = result.rows[0];
@@ -125,7 +124,7 @@ var OrderStore = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = 'DELETE FROM orders WHERE id=($1)';
+                        sql = 'DELETE FROM orders WHERE id=($1) RETURNING *';
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
@@ -154,7 +153,11 @@ var OrderStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        return [4 /*yield*/, conn.query(sql, [quantity, orderId, productId])];
+                        return [4 /*yield*/, conn.query(sql, [
+                                quantity,
+                                orderId,
+                                productId,
+                            ])];
                     case 2:
                         result = _a.sent();
                         order = result.rows[0];

@@ -46,14 +46,8 @@ var server_1 = __importDefault(require("../../server"));
 dotenv_1.default.config();
 var store = new product_1.ProductStore();
 var request = (0, supertest_1.default)(server_1.default);
-describe("Product Model", function () {
-    var oldEnv = process.env.ENV;
-    beforeAll(function () {
-        process.env.ENV = 'test';
-    });
-    afterAll(function () {
-        process.env.ENV = oldEnv;
-    });
+describe('Product Model', function () {
+    var productId = 0;
     it('should have an index method', function () {
         expect(store.index).toBeDefined();
     });
@@ -67,27 +61,18 @@ describe("Product Model", function () {
         expect(store.delete).toBeDefined();
     });
     it('create method should add a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+        var product;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
+                case 0: return [4 /*yield*/, store.create({
+                        name: 'T-shirt',
+                        price: 500,
+                        category: 'sporty',
                     })];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.post('/products').send({
-                            id: 1,
-                            name: "T-shirt",
-                            price: 500,
-                            category: "sporty"
-                        })
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    product = _a.sent();
+                    productId = product.id;
+                    expect(product.id).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
@@ -99,12 +84,7 @@ describe("Product Model", function () {
                 case 0: return [4 /*yield*/, store.index()];
                 case 1:
                     result = _a.sent();
-                    expect(result).toEqual([{
-                            id: 1,
-                            name: "T-shirt",
-                            price: 500,
-                            category: "sporty"
-                        }]);
+                    expect(result.length).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
@@ -113,36 +93,32 @@ describe("Product Model", function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.show(1)];
+                case 0: return [4 /*yield*/, store.show(productId)];
                 case 1:
                     result = _a.sent();
                     expect(result).toEqual({
-                        id: 1,
-                        name: "T-shirt",
+                        id: productId,
+                        name: 'T-shirt',
                         price: 500,
-                        category: "sporty"
+                        category: 'sporty',
                     });
                     return [2 /*return*/];
             }
         });
     }); });
     it('delete method should remove the product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
+                case 0: return [4 /*yield*/, store.delete(productId)];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.delete('/products')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    result = _a.sent();
+                    expect(result).toEqual({
+                        id: productId,
+                        name: 'T-shirt',
+                        price: 500,
+                        category: 'sporty',
+                    });
                     return [2 /*return*/];
             }
         });

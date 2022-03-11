@@ -6,9 +6,17 @@
   "scripts": {
     "prettier": "prettier --config prettierrc.json src/**/*.ts --write",
     "lint": "eslint src/**/*.ts",
-    "build": "npx tsc",
+    "build": "npm run clean && npx tsc",
+    "clean": "rm -rf build",
     "start": "nodemon src/server.ts",
-    "test": "ENV=test db-migrate --env test up && jasmine && db-migrate db:drop test"
+    "deleteTestDB": "db-migrate -e create db:drop full_stack_test",
+    "createTestDb": "db-migrate -e create db:create full_stack_test",
+    "createTestMigration": "db-migrate -e test reset && db-migrate -e test up",
+    "test": "npm run deleteTestDB && npm run createTestDb && npm run createTestMigration && npm run build && jasmine && npm run deleteTestDB",
+    "deleteDB": "db-migrate -e create db:drop full_stack_dev",
+    "createDB": "db-migrate -e create db:create full_stack_dev",
+    "createMigration": "db-migrate  reset && db-migrate up",
+    "prepareDB": "npm run deleteDB && npm run createDB && npm run createMigration"
   },
   "keywords": [],
   "author": "",

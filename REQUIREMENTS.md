@@ -33,8 +33,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### User
 - id [SERIAL PRIMARY KEY]
-- firstName [VARCHAR]
-- lastName [VARCHAR]
+- firstname [VARCHAR]
+- lastname [VARCHAR]
 - password [VARCHAR]
 
 #### Orders

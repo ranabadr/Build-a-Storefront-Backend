@@ -35,16 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var supertest_1 = __importDefault(require("supertest"));
 var user_1 = require("../../models/user");
-var server_1 = __importDefault(require("../../server"));
 var store = new user_1.UserStore();
-var request = (0, supertest_1.default)(server_1.default);
-describe("User Model", function () {
+describe('User Model', function () {
+    var userId = 0;
     it('should have an index method', function () {
         expect(store.index).toBeDefined();
     });
@@ -58,81 +53,54 @@ describe("User Model", function () {
         expect(store.delete).toBeDefined();
     });
     it('create method should add a user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+        var user;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
+                case 0: return [4 /*yield*/, store.create({
+                        firstname: 'Rana',
+                        lastname: 'Badr',
+                        password: 'password',
                     })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.status).toBe(200);
+                    user = _a.sent();
+                    expect(user.firstname).toBe('Rana');
+                    userId = user.id;
                     return [2 /*return*/];
             }
         });
     }); });
     it('index method should return a list of users', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+        var users;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
+                case 0: return [4 /*yield*/, store.index()];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.get('/users')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    users = _a.sent();
+                    expect(users.length).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
     }); });
     it('show method should return the correct user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+        var user;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
+                case 0: return [4 /*yield*/, store.show(userId)];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.get('/users/:id')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    user = _a.sent();
+                    expect(user.id).toBe(userId);
                     return [2 /*return*/];
             }
         });
     }); });
     it('delete method should remove the user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+        var user;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post("/users").send({
-                        id: 1,
-                        firstName: "Rana",
-                        lastName: "Badr",
-                        password: "password"
-                    })];
+                case 0: return [4 /*yield*/, store.delete(userId)];
                 case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, request.delete('/users')
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    user = _a.sent();
+                    expect(user.id).toBe(userId);
                     return [2 /*return*/];
             }
         });

@@ -40,21 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var product_1 = require("../models/product");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dotenv_1 = __importDefault(require("dotenv"));
+var authonication_1 = __importDefault(require("./authonication"));
 dotenv_1.default.config();
 var store = new product_1.ProductStore();
-var verifyAuthToken = function (req, res, next) {
-    try {
-        var authorizationHeader = req.headers.authorization;
-        var token = authorizationHeader;
-        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-        next();
-    }
-    catch (error) {
-        res.status(401).json('Access denied, invalid token');
-    }
-};
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var products, err_1;
     return __generator(this, function (_a) {
@@ -102,10 +91,9 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 product = {
-                    id: req.body.id,
                     name: req.body.name,
                     price: req.body.price,
-                    category: req.body.category
+                    category: req.body.category,
                 };
                 return [4 /*yield*/, store.create(product)];
             case 1:
@@ -144,7 +132,7 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
 var productRoutes = function (app) {
     app.get('/products', index);
     app.get('/products/:id', show);
-    app.post('/products', verifyAuthToken, create);
-    app.delete('/products', verifyAuthToken, destroy);
+    app.post('/products', authonication_1.default, create);
+    app.delete('/products', authonication_1.default, destroy);
 };
 exports.default = productRoutes;

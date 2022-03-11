@@ -40,20 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var order_1 = require("../models/order");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var dotenv_1 = __importDefault(require("dotenv"));
+var authonication_1 = __importDefault(require("./authonication"));
+dotenv_1.default.config();
 var store = new order_1.OrderStore();
-var verifyAuthToken = function (req, res, next) {
-    try {
-        var authorizationHeader = req.headers.authorization;
-        var token = authorizationHeader;
-        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-        next();
-    }
-    catch (err) {
-        res.status(400);
-        res.json(err);
-    }
-};
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var orders, err_1;
     return __generator(this, function (_a) {
@@ -101,9 +91,8 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 order = {
-                    id: req.body.id,
                     status: req.body.status,
-                    user_id: req.body.user_id
+                    user_id: req.body.user_id,
                 };
                 return [4 /*yield*/, store.create(order)];
             case 1:
@@ -139,36 +128,10 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
         }
     });
 }); };
-var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, productId, quantity, addedProduct, err_5;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                orderId = req.params.id;
-                productId = req.body.productId;
-                quantity = parseInt(req.body.quantity);
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.addProduct(quantity, orderId, productId)];
-            case 2:
-                addedProduct = _a.sent();
-                res.json(addedProduct);
-                return [3 /*break*/, 4];
-            case 3:
-                err_5 = _a.sent();
-                res.status(400);
-                res.json(err_5);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
 var orderRoutes = function (app) {
-    app.get('/orders', verifyAuthToken, index);
-    app.get('/orders/:id', verifyAuthToken, show);
-    app.post('/orders', verifyAuthToken, create);
-    app.delete('/orders', verifyAuthToken, destroy);
-    app.post("/orders/id/products", verifyAuthToken, addProduct);
+    app.get('/orders', authonication_1.default, index);
+    app.get('/orders/:id', authonication_1.default, show);
+    app.post('/orders', authonication_1.default, create);
+    app.delete('/orders', authonication_1.default, destroy);
 };
 exports.default = orderRoutes;

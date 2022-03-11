@@ -57,7 +57,7 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT * FROM users';
+                        sql = 'SELECT * FROM users;';
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
@@ -78,7 +78,7 @@ var UserStore = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = 'SELECT * FROM users WHERE id=($1)';
+                        sql = 'SELECT * FROM users WHERE id=$1;';
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
@@ -106,12 +106,17 @@ var UserStore = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
-                        sql = 'INSERT INTO users (firstName, lastName, password) VALUES($1, $2, $3) RETURNING *';
+                        sql = 'INSERT INTO users (firstname, lastname, password) VALUES($1, $2, $3) RETURNING *;';
                         return [4 /*yield*/, database_1.default.connect()];
                     case 2:
                         conn = _a.sent();
                         hash = bcrypt_1.default.hashSync(u.password + pepper, parseInt(saltRounds));
-                        return [4 /*yield*/, conn.query(sql, [u.firstName, u.lastName, hash])];
+                        console.log(hash);
+                        return [4 /*yield*/, conn.query(sql, [
+                                u.firstname,
+                                u.lastname,
+                                hash,
+                            ])];
                     case 3:
                         result = _a.sent();
                         user = result.rows[0];
@@ -119,13 +124,13 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, user];
                     case 4:
                         err_3 = _a.sent();
-                        throw new Error("Could not add new user ".concat(u.firstName, ".").concat(u.lastName, ". Error: ").concat(err_3));
+                        throw new Error("Could not add new user ".concat(u.firstname, ".").concat(u.lastname, ". Error: ").concat(err_3));
                     case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    UserStore.prototype.authenticate = function (firstName, lastName, password) {
+    UserStore.prototype.authenticate = function (id, password) {
         return __awaiter(this, void 0, void 0, function () {
             var pepper, conn, sql, result, user;
             return __generator(this, function (_a) {
@@ -135,8 +140,8 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'SELECT password FROM users WHERE username=($1)';
-                        return [4 /*yield*/, conn.query(sql, [firstName, lastName])];
+                        sql = 'SELECT password FROM users WHERE id=$1;';
+                        return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
                         console.log(password + pepper);
@@ -159,7 +164,7 @@ var UserStore = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        sql = 'DELETE FROM users WHERE id=($1)';
+                        sql = 'DELETE FROM users WHERE id=$1 RETURNING *;';
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();

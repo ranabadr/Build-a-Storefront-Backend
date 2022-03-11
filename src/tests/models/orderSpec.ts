@@ -1,108 +1,83 @@
-import supertest from 'supertest';
 import { Order, OrderStore } from '../../models/order';
-import app from '../../server';
+import { User, UserStore } from '../../models/user';
+import { Product, ProductStore } from '../../models/product';
+import { OrderItem, OrderItemStore } from '../../models/order_item';
 
 const store = new OrderStore();
+const storeU = new UserStore();
+const storeP = new ProductStore();
+const storeI = new OrderItemStore();
 
-const request = supertest(app);
+describe('Order Model', () => {
+  let orderId = 0;
+    let productId = 0;
+    let userId = 0;
+    beforeAll(async () => {
+        const res = await storeU.create({
+            firstname: 'Rana',
+            lastname: 'Badr',
+            password: 'password',
+        });
 
-describe("Order Model", () => {
-  it('should have an index method', () => {
-    expect(store.index).toBeDefined();
-  });
+        userId = res.id as unknown as number;
 
-  it('should have a show method', () => {
-    expect(store.show).toBeDefined();
-  });
+        const resP = await storeP.create({
+                name: 'T-shirt',
+                price: 500,
+                category: 'sporty',
+            })
 
-  it('should have a create method', () => {
-    expect(store.create).toBeDefined();
-  });
-
-  it('should have a delete method', () => {
-    expect(store.delete).toBeDefined();
-  });
-
-  it('create method should add a order', async () => {
-    const token = await request.post("/users").send({
-      id: 1,
-      firstName: "Rana",
-      lastName: "Badr",
-      password: "password"
-    });
-    const response = await request.post('/orders').send({
-      id: 1,
-      status: "active",
-    })
-    .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')
-    expect(response.status).toBe(200)
-  });
-
-  it('index method should return a list of orders', async () => {
-    const token = await request.post("/users").send({
-      id: 1,
-      firstName: "Rana",
-      lastName: "Badr",
-      password: "password"
-    });
-    const response = await request.get('/orders')
-    .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')
-    expect(response.status).toBe(200)
-  });
-
-  it('show method should return the correct order', async () => {
-    const token = await request.post("/users").send({
-      id: 1,
-      firstName: "Rana",
-      lastName: "Badr",
-      password: "password"
-    });
-    const response = await request.get('/orders/:id')
-    .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M')
-    expect(response.status).toBe(200)
-  });
-
-  it('delete method should remove the order', async () => {
-    const token = await request.post("/users").send({
-      id: 1,
-      firstName: "Rana",
-      lastName: "Badr",
-      password: "password"
-    });
-    const response = await request.delete('/orders')
-    .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M');
-    expect(response.status).toBe(200)
-  });
-
-  it('addProduct method should work', async () => {
-    const token = await request.post('/users').send({
-      id: 1,
-      firstName: "Rana",
-      lastName: "Badr",
-      password: "password"
+        productId = resP.id as unknown as number;
     });
 
-    const createProduct = await request.post('/products').send({
-      id:1,
-      name: "T-shirt",
-      price: 500,
-      category: "sporty"
-  })
-  .set(`Authorization`, `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M`);
+    it('should have an index method', () => {
+        expect(store.index).toBeDefined();
+    });
 
-  const createOrder = await request.post('/orders').send({
-    id: 1,
-    status: "active",
-  })
-  .set(`Authorization`, `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M`);
+    it('should have a show method', () => {
+        expect(store.show).toBeDefined();
+    });
 
-    const response = await request.post(`orders/1/products`).send({
-      id:1,
-      quantity: 50,
-      order_id:1,
-      product_id:1
-    })
-    .set(`Authorization`, `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo2MSwiZmlyc3RuYW1lIjoiUmFuYSIsImxhc3RuYW1lIjoiQmFkciIsInBhc3N3b3JkIjoiJDJiJDEwJG9aVWFXaDBBRFhmRGc5ZklHYi9LVHVrNzEvdmpkaE11aXVUeEQ4dDJwdTlEdnZGMUZ2SS9HIn0sImlhdCI6MTY0NjkwNzIwN30.FF_Y677nKlHRm8z074W36OXrT1YqSjGkbrPYrfM6_5M`);
-    expect(response.status).toBe(200)
-  });
+    it('should have a create method', () => {
+        expect(store.create).toBeDefined();
+    });
+
+    it('should have a delete method', () => {
+        expect(store.delete).toBeDefined();
+    });
+
+    it('create method should add a order', async () => {
+        const order: Order = await store.create({
+            status: 'active',
+            user_id: userId 
+        });
+        orderId = order.id as unknown as number;
+
+        expect(order.status).toBe('active');
+        expect(order.user_id).toBe(userId);
+    });
+
+    it('index method should return a list of orders', async () => {
+        const orders: Order[] = await store.index();
+        expect(orders).toContain({ id: orderId, status: 'active', user_id: userId });
+    });
+
+    it('show method should return the correct order', async () => {
+        const order: Order = await store.show(orderId);
+
+        expect(order.id).toBe(orderId);
+    });
+
+    it('addProduct method should work', async () => {
+        const orderItem: OrderItem = await storeI.addProduct({quantity: 50, order_id: orderId, product_id: productId})
+
+        expect(orderItem.order_id).toBe(orderId);
+        expect(orderItem.product_id).toBe(productId);
+    });
+
+    it('delete method should remove the order', async () => {
+        const order: Order = await store.delete(orderId)
+        expect(order.id).toBe(orderId);
+    });
+
 });

@@ -44,7 +44,7 @@ var product_1 = require("../../models/product");
 var server_1 = __importDefault(require("../../server"));
 var store = new product_1.ProductStore();
 var req = (0, supertest_1.default)(server_1.default);
-describe('Test endpoints', function () {
+describe('Test Product endpoints', function () {
     it('Get the products endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
         var res;
         return __generator(this, function (_a) {
@@ -73,19 +73,21 @@ describe('Test endpoints', function () {
         var token, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, req.post("/users").send({
-                        firstName: "salma",
-                        lastName: "badr",
-                        password: "pass123"
+                case 0: return [4 /*yield*/, req.post('/users').send({
+                        firstname: 'salma',
+                        lastname: 'badr',
+                        password: 'pass123',
                     })];
                 case 1:
                     token = _a.sent();
-                    return [4 /*yield*/, req.post('/products').send({
-                            name: "T-shirt",
+                    return [4 /*yield*/, req
+                            .post('/products')
+                            .send({
+                            name: 'T-shirt',
                             price: 500,
-                            category: "sporty"
+                            category: 'sporty',
                         })
-                            .set("Authorization", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo1NSwiZmlyc3RuYW1lIjoic2FsbWEiLCJsYXN0bmFtZSI6ImJhZHIiLCJwYXNzd29yZCI6InBhc3MxMjMifSwiaWF0IjoxNjQ2ODM1MTc1fQ.B9clGCUFww18US0TXNKogleWTJQ0hmrLUpjID7uHHTQ')];
+                            .set("Authorization", 'Bearer ' + token)];
                 case 2:
                     response = _a.sent();
                     return [2 /*return*/];

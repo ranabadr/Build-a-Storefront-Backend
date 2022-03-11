@@ -42,20 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = require("../models/user");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dotenv_1 = __importDefault(require("dotenv"));
+var authonication_1 = __importDefault(require("./authonication"));
 dotenv_1.default.config();
 var store = new user_1.UserStore();
-var verifyAuthToken = function (req, res, next) {
-    try {
-        var authorizationHeader = req.headers.authorization;
-        var token = authorizationHeader;
-        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-        next();
-    }
-    catch (err) {
-        res.status(400);
-        res.json(err);
-    }
-};
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var users, err_1;
     return __generator(this, function (_a) {
@@ -103,16 +92,20 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 user = {
-                    id: req.body.id,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    password: req.body.password
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    password: req.body.password,
                 };
                 return [4 /*yield*/, store.create(user)];
             case 1:
                 newUser = _a.sent();
                 token = jsonwebtoken_1.default.sign({ user: newUser }, process.env.TOKEN_SECRET);
-                res.json(token);
+                res.json({
+                    id: newUser.id,
+                    firstname: newUser.firstname,
+                    lastname: newUser.lastname,
+                    token: token,
+                });
                 return [3 /*break*/, 3];
             case 2:
                 err_3 = _a.sent();
@@ -144,9 +137,9 @@ var destroy = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
     });
 }); };
 var userRoutes = function (app) {
-    app.get('/users', verifyAuthToken, index);
-    app.get('/users/:id', verifyAuthToken, show);
+    app.get('/users', authonication_1.default, index);
+    app.get('/users/:id', authonication_1.default, show);
     app.post('/users', create);
-    app.delete('/users', verifyAuthToken, destroy);
+    app.delete('/users', authonication_1.default, destroy);
 };
 exports.default = userRoutes;
